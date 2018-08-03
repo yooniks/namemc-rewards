@@ -1,0 +1,10 @@
+name: 'NameMCRewards'
+version: ${project.version}
+main: 'xyz.yooniks.namemc.NameMCRewardsPlugin'
+authors: '[yooniks']
+description: 'Give rewards to the player for liking your server on namemc!'
+website: 'www.youtube.com/c/Enchanted3'
+
+commands:
+  namemc:
+    description: 'Like this server on namemc.com to get unique rewards!'
