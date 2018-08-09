@@ -3,7 +3,7 @@ package xyz.yooniks.namemc.config;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.bukkit.Bukkit;
+import java.util.UUID;
 import xyz.yooniks.namemc.config.system.ConfigExtender;
 import xyz.yooniks.namemc.config.system.Configuration;
 
@@ -14,6 +14,6 @@ public class RewardListConfig extends ConfigExtender {
   }
 
   public static List<String> REWARD_LIST = new ArrayList<>(
-      Collections.singletonList(Bukkit.getOfflinePlayer("yooniks_tendev").getUniqueId().toString()));
+      Collections.singletonList(UUID.randomUUID().toString()));
 
 }

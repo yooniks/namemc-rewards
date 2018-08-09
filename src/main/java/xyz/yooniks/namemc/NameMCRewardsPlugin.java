@@ -10,9 +10,9 @@ import xyz.yooniks.namemc.config.RewardListConfig;
 import xyz.yooniks.namemc.config.system.ConfigHelper;
 import xyz.yooniks.namemc.helper.ItemParserHelper;
 import xyz.yooniks.namemc.reward.RewardManager;
+import xyz.yooniks.namemc.reward.basic.CommandReward;
+import xyz.yooniks.namemc.reward.basic.ItemReward;
 import xyz.yooniks.namemc.reward.impl.RewardManagerImpl;
-import xyz.yooniks.namemc.reward.reward.CommandReward;
-import xyz.yooniks.namemc.reward.reward.ItemReward;
 
 public final class NameMCRewardsPlugin extends JavaPlugin {
 
@@ -25,21 +25,26 @@ public final class NameMCRewardsPlugin extends JavaPlugin {
     this.rewardManager = new RewardManagerImpl();
 
     RewardConfig.GIVE_REWARD$REWARD_COMMANDS.forEach(
-        command -> this.rewardManager.addReward(new CommandReward(command)));
+        command -> this.rewardManager.addReward(
+            new CommandReward(command)));
 
     RewardConfig.GIVE_REWARD$REWARD_ITEMS.forEach(
-        itemToParse -> this.rewardManager.addReward(new ItemReward(ItemParserHelper.parseItem(itemToParse))));
+        itemToParse -> this.rewardManager.addReward(
+            new ItemReward(ItemParserHelper.parseItem(itemToParse))));
 
     ConfigHelper.create(new File(this.getDataFolder(), "config.yml"), RewardConfig.class);
     ConfigHelper.create(new File(this.getDataFolder(), "given_rewards.yml"), RewardListConfig.class);
 
-    this.rewardManager.addGivenRewards(RewardListConfig.REWARD_LIST.stream()
+    this.rewardManager.getRewardValidator().addGivenRewards(RewardListConfig.REWARD_LIST.stream()
         .map(UUID::fromString)
         .collect(Collectors.toList())
     );
 
-    this.getServer().getScheduler().runTaskTimerAsynchronously(this,
-        RewardListConfig::saveConfig, 0L, 20L * 120);
+    this.getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+      this.getLogger().info("Saving all rewards..");
+      RewardListConfig.saveConfig();
+      this.getLogger().info("Saving completed!");
+    }, 0L, 20L * 180);
 
     this.getCommand("namemc").setExecutor(new NameMCCommand(this.rewardManager));
   }

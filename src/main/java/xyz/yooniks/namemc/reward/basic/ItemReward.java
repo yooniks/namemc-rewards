@@ -1,4 +1,4 @@
-package xyz.yooniks.namemc.reward.reward;
+package xyz.yooniks.namemc.reward.basic;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

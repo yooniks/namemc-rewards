@@ -1,4 +1,4 @@
-package xyz.yooniks.namemc.reward.reward;
+package xyz.yooniks.namemc.reward.basic;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;

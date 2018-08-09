@@ -4,15 +4,12 @@ import static xyz.yooniks.namemc.helper.MessageHelper.colored;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import org.bukkit.entity.Player;
-import xyz.yooniks.namemc.config.RewardListConfig;
-import xyz.yooniks.namemc.reward.reward.Reward;
+import xyz.yooniks.namemc.config.RewardConfig;
 import xyz.yooniks.namemc.reward.RewardManager;
 import xyz.yooniks.namemc.reward.RewardValidator;
-import xyz.yooniks.namemc.config.RewardConfig;
+import xyz.yooniks.namemc.reward.basic.Reward;
 
 public class RewardManagerImpl implements RewardManager {
 
@@ -29,13 +26,8 @@ public class RewardManagerImpl implements RewardManager {
   }
 
   @Override
-  public void addGivenRewards(List<UUID> uuids) {
-    this.rewardValidator.addGivenRewards(uuids);
-  }
-
-  @Override
-  public boolean status(UUID uuid) {
-    return this.rewardValidator.validate(uuid);
+  public RewardValidator getRewardValidator() {
+    return this.rewardValidator;
   }
 
   @Override

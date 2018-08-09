@@ -17,10 +17,10 @@ import xyz.yooniks.namemc.reward.RewardManager;
 
 public class NameMCCommand implements CommandExecutor {
 
-  private final RewardManager rewardManager;
-
   private final ResponseReader responseReader = new ResponseReader();
   private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+  private final RewardManager rewardManager;
 
   public NameMCCommand(RewardManager rewardManager) {
     this.rewardManager = rewardManager;
@@ -33,7 +33,7 @@ public class NameMCCommand implements CommandExecutor {
       return true;
     }
     final Player player = ((Player) sender);
-    if (this.rewardManager.status(player.getUniqueId())) {
+    if (!this.rewardManager.getRewardValidator().validate(player.getUniqueId())) {
       player.sendMessage(colored(RewardConfig.GIVE_REWARD$MESSAGES$ERROR));
       return true;
     }

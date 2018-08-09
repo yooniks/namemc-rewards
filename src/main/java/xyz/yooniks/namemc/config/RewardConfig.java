@@ -14,7 +14,7 @@ public class RewardConfig extends ConfigExtender {
   }
 
   public static String GIVE_REWARD$MESSAGES$HAVE_NEVER_GIVEN = "&cYou have never given a like for this server on namemc.com!";
-  public static String GIVE_REWARD$MESSAGES$ERROR = "&cYou have already given a rate for this server, you cannot get next reward!";
+  public static String GIVE_REWARD$MESSAGES$ERROR = "&cYou have already given a rate for this server, you cannot get next basic!";
   public static String GIVE_REWARD$MESSAGES$SUCCESS = "&aThe server have just given you rewards! Thank you for the rate!";
 
   public static List<String> GIVE_REWARD$REWARD_ITEMS = new ArrayList<>(Arrays.asList("1 64", "2 1")); //item id | amount
