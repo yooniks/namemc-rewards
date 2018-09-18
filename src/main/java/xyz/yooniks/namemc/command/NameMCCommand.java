@@ -2,23 +2,24 @@ package xyz.yooniks.namemc.command;
 
 import static xyz.yooniks.namemc.helper.MessageHelper.colored;
 
-import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import org.apache.commons.io.IOUtils;
+import javax.net.ssl.HttpsURLConnection;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import xyz.yooniks.namemc.NameMCRewardsPlugin;
 import xyz.yooniks.namemc.config.RewardConfig;
 import xyz.yooniks.namemc.reward.RewardManager;
 
 public class NameMCCommand implements CommandExecutor {
 
   private final ResponseReader responseReader = new ResponseReader();
-  private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
   private final RewardManager rewardManager;
 
@@ -40,9 +41,16 @@ public class NameMCCommand implements CommandExecutor {
 
     player.sendMessage(RewardConfig.NAMEMC$RESPONSE_REQUEST_MESSAGE);
 
-    //i have never used "future" so if someone has solution for that i am waiting for pull request :D
-    this.executorService.submit(() -> {
-      final String response = this.responseReader.read(player.getUniqueId());
+    Bukkit.getScheduler().runTaskAsynchronously(NameMCRewardsPlugin.getPlugin(NameMCRewardsPlugin.class),
+        () -> {
+      final String response;
+      try {
+        response = this.responseReader.read(player.getUniqueId());
+      }
+      catch (IOException ex) {
+        player.sendMessage(colored("&cCannot read url content! " + ex.getMessage()));
+        return;
+      }
 
       if (response.contains("true")) {
         this.rewardManager.giveReward(player);
@@ -55,17 +63,13 @@ public class NameMCCommand implements CommandExecutor {
 
   static class ResponseReader {
 
-    String read(UUID uuid) {
-      try {
-        final URL url = new URL(RewardConfig.NAMEMC$URL + uuid.toString());
-        final InputStream inputStream = url.openStream();
-        return IOUtils.toString(inputStream);
-      }
-      catch (Exception exception) {
-        return "false";
-      }
-    }
+    String read(UUID uuid) throws IOException {
+      final URL url = new URL(RewardConfig.NAMEMC$URL + uuid.toString());
+      final HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+      con.setRequestMethod("GET");
 
+      return new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
+    }
   }
 
 }
